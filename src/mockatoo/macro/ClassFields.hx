@@ -358,6 +358,8 @@ class ClassFields
 			case AccResolve: throw "not implemented for VarAccess [" + access + "]";
 			case AccCall: "property";
 			case AccRequire(_,_): throw "not implemented VarAccess [" + access + "]";
+			
+			default : throw "not implemented VarAccess [" + access + "]";
 		}		
 	}
 

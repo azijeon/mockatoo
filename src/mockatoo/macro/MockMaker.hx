@@ -167,14 +167,14 @@ class MockMaker
 	*/
 	function createMockFromStruct(fields:Array<ClassField>)
 	{
-		var args:Array<{ field : String, expr : Expr }> = [];
+		var args:Array<{ field : String, expr : Expr, ?quotes : Dynamic }> = [];
 
-		var arg:{ field : String, expr : Expr };
+		var arg:{ field : String, expr : Expr , ?quotes : Dynamic };
 
 		for (field in fields)
 		{
 			Console.log(field.name);
-			arg = {field:field.name, expr:null};
+			arg = {field:field.name, expr:null, quotes : null };
 
 		
 			switch (field.type)
