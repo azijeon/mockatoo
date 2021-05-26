@@ -559,7 +559,7 @@ class MockMethodTest
 
 		var f = function(value:Dynamic):Bool
 		{
-			return Std.is(value, String) && value.charAt(0) == "f";
+			return Std.isOfType(value, String) && value.charAt(0) == "f";
 		}
 
 		try

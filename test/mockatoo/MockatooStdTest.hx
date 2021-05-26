@@ -134,6 +134,6 @@ class MockatooStdTest
 
 	function assertMock(mock:Mock, ?pos:haxe.PosInfos)
 	{
-		Assert.isTrue(Std.is(mock, Mock), pos);
+		Assert.isTrue(Std.isOfType(mock, Mock), pos);
 	}
 }

@@ -236,7 +236,7 @@ class Mockatoo
 	static public function reset(mock:Dynamic)
 	{
 		Console.assert(mock != null, "Cannot verify [null] mock");
-		Console.assert(Std.is(mock, Mock), "Object is not an instance of mock");
+		Console.assert(Std.isOfType(mock, Mock), "Object is not an instance of mock");
 		return mock.mockProxy.reset();
 	}
 }

@@ -63,12 +63,12 @@ class VerifyMacro
 		if (haxe.macro.Compiler.getDefine("cpp") != null)
 		{
 			eIsNotNull = macro if ($expr == null) throw new mockatoo.exception.VerificationException("Cannot verify [null] mock");
-			eIsAMock = macro if (!Std.is($expr, mockatoo.Mock)) throw new mockatoo.exception.VerificationException("Object is not an instance of mock");
+			eIsAMock = macro if (!Std.isOfType($expr, mockatoo.Mock)) throw new mockatoo.exception.VerificationException("Object is not an instance of mock");
 		}
 		else
 		{
 			eIsNotNull = macro Console.assert($expr != null, new mockatoo.exception.VerificationException("Cannot verify [null] mock"));
-			eIsAMock = macro Console.assert(Std.is($expr, mockatoo.Mock), new mockatoo.exception.VerificationException("Object is not an instance of mock"));
+			eIsAMock = macro Console.assert(Std.isOfType($expr, mockatoo.Mock), new mockatoo.exception.VerificationException("Object is not an instance of mock"));
 		}
 
 		var verifyExpr = macro cast($expr, mockatoo.Mock).mockProxy.verify($mode);

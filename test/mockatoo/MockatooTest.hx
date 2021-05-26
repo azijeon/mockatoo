@@ -185,7 +185,7 @@ class MockatooTest
 		var mock = Mockatoo.mock(TypedefToSimpleInterface);
 		assertMock(mock, TypedefToSimpleInterface, fields);
 
-		Assert.isTrue(Std.is(mock, SimpleInterface));
+		Assert.isTrue(Std.isOfType(mock, SimpleInterface));
 	}
 
 	@Test
@@ -197,7 +197,7 @@ class MockatooTest
 		var mock = Mockatoo.mock(TypedefToSimpleClass);
 		assertMock(mock, TypedefToSimpleClass, fields);
 
-		Assert.isTrue(Std.is(mock, SimpleClass));
+		Assert.isTrue(Std.isOfType(mock, SimpleClass));
 	}
 
 	@Test
@@ -209,7 +209,7 @@ class MockatooTest
 		var mock = Mockatoo.mock(TypedefToStringTypedInterface);
 		assertMock(mock, TypedefToStringTypedInterface, fields);
 
-		Assert.isTrue(Std.is(mock, TypedInterface));
+		Assert.isTrue(Std.isOfType(mock, TypedInterface));
 	}
 
 	@Test
@@ -221,7 +221,7 @@ class MockatooTest
 		var mock = Mockatoo.mock(TypedefToStringTypedClass);
 		assertMock(mock, TypedefToStringTypedClass, fields);
 
-		Assert.isTrue(Std.is(mock, TypedClass));
+		Assert.isTrue(Std.isOfType(mock, TypedClass));
 	}
 
 	@Test
@@ -233,7 +233,7 @@ class MockatooTest
 		var mock = Mockatoo.mock(TypedefToImplementsTypedInterface);
 		assertMock(mock, TypedefToImplementsTypedInterface, fields);
 
-		Assert.isTrue(Std.is(mock, TypedInterface));
+		Assert.isTrue(Std.isOfType(mock, TypedInterface));
 	}
 
 	@Test
@@ -245,7 +245,7 @@ class MockatooTest
 		var mock = Mockatoo.mock(TypedefToExtendsTypedClass);
 		assertMock(mock, TypedefToExtendsTypedClass, fields);
 
-		Assert.isTrue(Std.is(mock, TypedClass));
+		Assert.isTrue(Std.isOfType(mock, TypedClass));
 	}
 
 	@Test
@@ -785,8 +785,8 @@ class MockatooTest
 	{
 		if (fields == null) fields = [];
 
-		Assert.isTrue(Std.is(mock, cls), pos);
-		Assert.isTrue(Std.is(mock, Mock), pos);
+		Assert.isTrue(Std.isOfType(mock, cls), pos);
+		Assert.isTrue(Std.isOfType(mock, Mock), pos);
 
 		var className = Type.getClassName(cls);
 

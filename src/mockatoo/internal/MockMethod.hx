@@ -285,15 +285,15 @@ class MockMethod
 					var expectedMatcher:Matcher = cast expected;
 					switch (expectedMatcher)
 					{
-						case Matcher.anyString: return Std.is(actual, String);
-						case Matcher.anyInt:  return Std.is(actual, Int);
-						case Matcher.anyFloat: return Std.is(actual, Float);
-						case Matcher.anyBool: return Std.is(actual, Bool);
+						case Matcher.anyString: return Std.isOfType(actual, String);
+						case Matcher.anyInt:  return Std.isOfType(actual, Int);
+						case Matcher.anyFloat: return Std.isOfType(actual, Float);
+						case Matcher.anyBool: return Std.isOfType(actual, Bool);
 						case Matcher.anyIterator: return isIterable(actual);
 						case Matcher.anyObject: return isObject(actual);
 						case Matcher.anyEnum: return isEnumValueOf(actual, null);
 						case Matcher.enumOf(en): return isEnumValueOf(actual, en);
-						case Matcher.instanceOf(c): return Std.is(actual, c);
+						case Matcher.instanceOf(c): return Std.isOfType(actual, c);
 						case Matcher.isNotNull: return actual != null;
 						case Matcher.any: return true;
 						case Matcher.customMatcher(f): return f(actual);
@@ -331,7 +331,7 @@ class MockMethod
 		if (value == null) return false;	
 		
 		// Please note, we cannot check HashMap because it is an abstract, and does not have an iterator function at runtime.
-		if (Std.is(value, Array) || Std.is(value, Map.IMap)) return true;
+		if (Std.isOfType(value, Array) || Std.isOfType(value, Map.IMap)) return true;
 		
 		//Iterable
 		var iterator = Reflect.field(value, "iterator");

@@ -46,16 +46,16 @@ class MockatooMetadataWithSetupTest implements mockatoo.MockTest
 	{
 		Assert.isTrue(value);
 		Assert.isNotNull(mock);
-		Assert.isTrue(Std.is(mock, SimpleClass));
-		Assert.isTrue(Std.is(mock, Mock));
+		Assert.isTrue(Std.isOfType(mock, SimpleClass));
+		Assert.isTrue(Std.isOfType(mock, Mock));
 	}
 
 	@Test
 	public function should_generate_spy():Void
 	{
 		Assert.isNotNull(spy);
-		Assert.isTrue(Std.is(spy, SimpleClass));
-		Assert.isTrue(Std.is(spy, Mock));
+		Assert.isTrue(Std.isOfType(spy, SimpleClass));
+		Assert.isTrue(Std.isOfType(spy, Mock));
 	}
 
 }
