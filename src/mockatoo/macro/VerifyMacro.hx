@@ -60,7 +60,7 @@ class VerifyMacro
 		var eIsNotNull:Expr;
 		var eIsAMock:Expr;
 
-		if (haxe.macro.Compiler.getDefine("cpp") != null)
+		if (Context.definedValue("cpp") != null)
 		{
 			eIsNotNull = macro if ($expr == null) throw new mockatoo.exception.VerificationException("Cannot verify [null] mock");
 			eIsAMock = macro if (!Std.isOfType($expr, mockatoo.Mock)) throw new mockatoo.exception.VerificationException("Object is not an instance of mock");
