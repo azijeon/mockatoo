@@ -309,6 +309,7 @@ class ClassWithTypedConstraint<T:TypedConstraintFoo>
 	}
 }
 
+#if(haxe_ver < 4.0)
 class ClassWithMultipleTypedConstraints<T:(TypedConstraintFoo,TypedConstraintBar)>
 {
 	public function new()
@@ -321,6 +322,7 @@ class ClassWithMultipleTypedConstraints<T:(TypedConstraintFoo,TypedConstraintBar
 		return "";
 	}
 }
+#end
 
 class TypedConstraintFoo
 {
@@ -384,7 +386,7 @@ class ClassWithProperties
 
 	public var readOnly(default, null):String;
 	
-	public var setter(default, set_setter):String;
+	public var setter(default, set):String;
 	
 	public var never(default, never):String;
 
@@ -396,7 +398,7 @@ class ClassWithProperties
 		return value;
 	}
 
-	@:isVar public var getterSetter(get_getterSetter, set_getterSetter):String;
+	@:isVar public var getterSetter(get, set):String;
 	
 	function get_getterSetter():String
 	{
@@ -418,16 +420,16 @@ class ClassWithProperties
 
 interface InterfaceWithProperties
 {
-	public var getterSetter(get_getterSetter, set_getterSetter):String;
+	public var getterSetter(get, set):String;
     public var getter(default, null):String;
-    public var setter(default, set_setter):String;
+    public var setter(default, set):String;
 }
  
 interface InterfaceWithTypedProperties<T>
 {
-    public var getterSetter(get_getterSetter, set_getterSetter):T;
+    public var getterSetter(get, set):T;
     public var getter(default, null):T;
-    public var setter(default, set_setter):T;
+    public var setter(default, set):T;
 }
  
  
@@ -499,13 +501,13 @@ class Issue17Class implements Issue17Interface
 
 	public var nulledGetterSetter(get, set): Null<Void->Void>;
 
-	function set_nulledGetterSetter(v:Void->Void):Void->Void
+	function set_nulledGetterSetter(v:Null<Void->Void>):Null<Void->Void>
 	{
 		value = v;
 		return value;
 	}
 
-	function get_nulledGetterSetter():Void->Void
+	function get_nulledGetterSetter():Null<Void->Void>
 	{
 		return value;
 	}
@@ -606,7 +608,7 @@ class ClassWithAbstractProperties
 {
 	var property:AbstractInt = new AbstractInt(0);
 
-	public var setter(default, set_setter):AbstractInt;
+	public var setter(default, set):AbstractInt;
 
 	function set_setter(value:AbstractInt)
 	{
