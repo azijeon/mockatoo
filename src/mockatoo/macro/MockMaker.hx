@@ -10,6 +10,7 @@ import mockatoo.Mock;
 import mockatoo.macro.ClassFields;
 import mockatoo.internal.MockOutcome;
 import haxe.ds.StringMap;
+import mconsole.Console;
 
 using StringTools;
 using haxe.macro.Tools;

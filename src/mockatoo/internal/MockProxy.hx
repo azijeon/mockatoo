@@ -279,7 +279,7 @@ class MockProxy
 
 		for (fieldName in fieldNames)
 		{	
-			#if (flash || php || java)
+			#if (flash || php || java || cs)
 				if (Reflect.hasField(target, fieldName))
 				{
 					if (!Reflect.isFunction(Reflect.field(target, fieldName))) continue;

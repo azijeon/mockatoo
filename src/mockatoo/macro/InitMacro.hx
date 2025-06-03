@@ -8,6 +8,7 @@ import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
+import mconsole.Console;
 
 /**
 	Macro for initializing Mockatoo including compiler flags, logging, etc
@@ -23,7 +24,7 @@ class InitMacro
 
 		initialized = true;
 
-		Compiler.define("no-inline");
+		// Compiler.define("no-inline");
 
 		Console.removePrinter(Console.defaultPrinter);
 

@@ -10,6 +10,7 @@ import haxe.PosInfos;
 import haxe.macro.Printer;
 import haxe.macro.TypeTools;
 import haxe.ds.StringMap;
+import mconsole.Console;
 
 using haxe.macro.Tools;
 using mockatoo.macro.Tools;
@@ -32,7 +33,8 @@ typedef TypeParameter =
 */
 class ClassFields
 {
-	@:extern static inline var PRETTY = true;
+	#if (haxe_ver < 4.0)@:#end extern 
+	static inline var PRETTY = true;
 
 	/**
 		Recursively aggregates fields from class and super classes, ensuring that

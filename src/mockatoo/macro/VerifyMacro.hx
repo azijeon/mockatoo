@@ -7,6 +7,7 @@ import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
 import mockatoo.exception.VerificationException;
+import mconsole.Console;
 
 using haxe.macro.Tools;
 using mockatoo.macro.Tools;
@@ -60,16 +61,14 @@ class VerifyMacro
 		var eIsNotNull:Expr;
 		var eIsAMock:Expr;
 
-		if (haxe.macro.Compiler.getDefine("cpp") != null)
-		{
+		
+		#if cpp
 			eIsNotNull = macro if ($expr == null) throw new mockatoo.exception.VerificationException("Cannot verify [null] mock");
 			eIsAMock = macro if (!Std.isOfType($expr, mockatoo.Mock)) throw new mockatoo.exception.VerificationException("Object is not an instance of mock");
-		}
-		else
-		{
-			eIsNotNull = macro Console.assert($expr != null, new mockatoo.exception.VerificationException("Cannot verify [null] mock"));
-			eIsAMock = macro Console.assert(Std.isOfType($expr, mockatoo.Mock), new mockatoo.exception.VerificationException("Object is not an instance of mock"));
-		}
+		#else
+			eIsNotNull = macro mconsole.Console.assert($expr != null, new mockatoo.exception.VerificationException("Cannot verify [null] mock"));
+			eIsAMock = macro mconsole.Console.assert(Std.isOfType($expr, mockatoo.Mock), new mockatoo.exception.VerificationException("Object is not an instance of mock"));
+		#end
 
 		var verifyExpr = macro cast($expr, mockatoo.Mock).mockProxy.verify($mode);
 		verifyExpr.pos = Context.currentPos();

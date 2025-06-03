@@ -6,6 +6,7 @@ import mockatoo.macro.InitMacro;
 import mockatoo.macro.MockMaker;
 import mockatoo.macro.VerifyMacro;
 import mockatoo.macro.StubbingMacro;
+import mconsole.Console;
 
 using mockatoo.macro.Tools;
 /**

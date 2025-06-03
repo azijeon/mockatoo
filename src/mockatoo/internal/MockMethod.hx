@@ -8,6 +8,7 @@ import haxe.PosInfos;
 using mockatoo.util.TypeEquality;
 
 typedef AnyEnum = Enum<Dynamic>;
+typedef IMap<K,V> = #if (haxe_ver < 4.0) Map.IMap<K,V> #else haxe.Constraints.IMap<K,V> #end;
 
 /**
 	Represents a single method in a Mock class, storing all calls, verifications
@@ -331,7 +332,7 @@ class MockMethod
 		if (value == null) return false;	
 		
 		// Please note, we cannot check HashMap because it is an abstract, and does not have an iterator function at runtime.
-		if (Std.isOfType(value, Array) || Std.isOfType(value, Map.IMap)) return true;
+		if (Std.isOfType(value, Array) || Std.isOfType(value, IMap)) return true;
 		
 		//Iterable
 		var iterator = Reflect.field(value, "iterator");
