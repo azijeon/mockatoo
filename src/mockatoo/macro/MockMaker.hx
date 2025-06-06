@@ -735,9 +735,14 @@ class MockMaker
 				var argExpr = arg.type.getDefaultValue();
 				args.push(argExpr);
 			}
-			e = e.call(args);
 
+			e = e.call(args);
+			
 			//remove super arg paramaters from constructor
+			// trace(f);
+			// for(a in f.args)
+			// 	trace('c: $a');
+
 			f.args = [];
 		}
 
@@ -750,9 +755,20 @@ class MockMaker
 
 		f.args.push(spyArg);
 
-		//deliberately call return before call to super
-		//to prevent target class constructor being executed
-		var exprs:Array<Expr> = [eMockConstructorExprs,eReturn, e];
+		var exprs:Array<Expr>;
+
+		if(Context.defined("cs"))
+		{
+			exprs = [eMockConstructorExprs, e];
+		}
+		else
+		{
+			//deliberately call return before call to super
+			//to prevent target class constructor being executed
+			//!(which apparently is incompatible with C#, possibly others)
+			exprs = [eMockConstructorExprs, eReturn, e];
+		}
+
 		f.expr = EBlock(exprs).at();
 	}
 

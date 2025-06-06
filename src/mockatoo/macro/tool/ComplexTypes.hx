@@ -5,6 +5,7 @@ package mockatoo.macro.tool;
 import haxe.macro.Context;
 import haxe.macro.Type;
 import haxe.macro.Expr;
+import mconsole.Console;
 
 using haxe.macro.Tools;
 using mockatoo.macro.Tools;

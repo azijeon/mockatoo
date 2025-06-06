@@ -7,6 +7,7 @@ import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
 import mockatoo.exception.StubbingException;
+import mconsole.Console;
 
 using haxe.macro.Tools;
 using mockatoo.macro.Tools;
