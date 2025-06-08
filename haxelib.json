@@ -1,0 +1,15 @@
+{
+	"name": "mockatoo",
+	"url" : "https://github.com/azijeon/mockatoo",
+	"license": "MIT",
+	"tags": ["cross", "mocking"],
+	"description": "",
+	"version": "1.0.0",
+	"classPath": "src/",
+	"releasenote": "Haxe 4 compatibility fixes",
+	"contributors": [],
+	"dependencies": 
+	{
+		"mconsole" : "1.*"
+  	}
+}
