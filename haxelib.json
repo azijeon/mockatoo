@@ -3,11 +3,14 @@
 	"url" : "https://github.com/azijeon/mockatoo",
 	"license": "MIT",
 	"tags": ["cross", "mocking"],
-	"description": "",
-	"version": "1.0.0",
+	"description": "Mockatoo is a Haxe library for mock creation, verification and stubbing.",
+	"version": "3.2.2",
 	"classPath": "src/",
 	"releasenote": "Haxe 4 compatibility fixes",
-	"contributors": [],
+	"contributors": [
+		"massive",
+		"azijeon"
+	],
 	"dependencies": 
 	{
 		"mconsole" : "1.*"

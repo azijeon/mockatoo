@@ -149,13 +149,38 @@ class MockMaker
 			}
 
 			var eIsSpy = EConst(CIdent(Std.string(isSpy))).at();
-
 			var typePath = typeDefinitionId.toTypePath(typeParams);
-			generatedExpr = ENew(typePath, [eIsSpy]).at(pos);
+			
+			if(Context.defined("cs"))
+			{
+				// Create an uninitialized instance of the mocked object in C# in order to bypass constructor calls
+				var class_parts = typePath.pack.concat([typePath.name]);
+				var class_name = class_parts.join(".");
+				var inst : Expr = {
+					expr : EVars([{
+						name: "i",
+						type: class_name.toComplex(),
+						expr: macro null,
+					}]),
+					pos: Context.currentPos(),
+				}
+
+				generatedExpr = macro {
+					$inst;
+					var t = cs.system.Type.GetType($v{class_name});
+					i = cs.system.runtime.serialization.FormatterServices.GetUninitializedObject(t);
+					i.mockProxy = new mockatoo.internal.MockProxy(i, $eIsSpy);
+					i;
+				};
+			}
+			else
+			{
+				generatedExpr = ENew(typePath, [eIsSpy]).at(pos);
+			}
 		}
 
 		Console.log(generatedExpr.toString());
-		return generatedExpr;	
+		return cast generatedExpr;	
 	}
 
 	function toComplexType(type:Type):ComplexType
@@ -540,7 +565,9 @@ class MockMaker
 
 				if (field.access.remove(AInline))
 				{
-					#if no_inline
+					#if skip_inline
+						return;
+					#elseif no_inline
 						fields.push(field);
 					#elseif !ignore_inline
 						Context.warning("Cannot mock inline method [" + id + "." + field.name + "]. Please set '--no-inline' compiler flag.", Context.currentPos());
@@ -739,10 +766,6 @@ class MockMaker
 			e = e.call(args);
 			
 			//remove super arg paramaters from constructor
-			// trace(f);
-			// for(a in f.args)
-			// 	trace('c: $a');
-
 			f.args = [];
 		}
 
@@ -760,6 +783,7 @@ class MockMaker
 		if(Context.defined("cs"))
 		{
 			exprs = [eMockConstructorExprs, e];
+			Console.log(e);
 		}
 		else
 		{

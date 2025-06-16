@@ -22,7 +22,6 @@ class Mockatoo
 	**/
 	macro static public function mock<T>(typeToMock:ExprOf<Class<T>>, ?paramTypes:ExprOf<Array<Class<T>>>):ExprOf<T>
 	{
-		InitMacro.init();
 		try
 		{
 			var mock = new MockMaker(typeToMock.typed(), paramTypes);

@@ -24,7 +24,7 @@ class InitMacro
 
 		initialized = true;
 
-		// Compiler.define("no-inline");
+		Compiler.define("no-inline");
 
 		Console.removePrinter(Console.defaultPrinter);
 

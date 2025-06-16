@@ -1,1 +1,2 @@
 -D no-inline
+--macro mockatoo.macro.InitMacro.init()
