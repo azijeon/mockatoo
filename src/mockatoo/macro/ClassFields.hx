@@ -2,14 +2,10 @@ package mockatoo.macro;
 
 #if macro
 
-import haxe.macro.Expr;
-import haxe.macro.Context;
-import haxe.macro.Compiler;
-import haxe.macro.Type;
-import haxe.PosInfos;
-import haxe.macro.Printer;
-import haxe.macro.TypeTools;
 import haxe.ds.StringMap;
+import haxe.macro.Context;
+import haxe.macro.Expr;
+import haxe.macro.Type;
 import mconsole.Console;
 
 using haxe.macro.Tools;
@@ -33,7 +29,7 @@ typedef TypeParameter =
 */
 class ClassFields
 {
-	#if (haxe_ver < 4.0)@:#end extern 
+	#if (haxe_ver < 4.0)@:#end extern
 	static inline var PRETTY = true;
 
 	/**
@@ -173,6 +169,10 @@ class ClassFields
 				return TEnum(t, mapTypes(params,map));
 			case TType(t, params):
 				return TType(t, mapTypes(params,map));
+			#if (haxe_ver > 4.0)
+			case TAbstract(t, params):
+				return TAbstract(t, mapTypes(params,map));
+			#end
 			default:
 				return type;	
 		}
