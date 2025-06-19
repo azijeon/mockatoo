@@ -39,6 +39,10 @@ class InitMacro
 		#else
 		Console.stop();
 		#end
+
+		#if (static && haxe_ver >= 4)
+		Compiler.addGlobalMetadata("", '@:build(${Type.getClassName(StaticBuilder)}.build())');
+		#end
 	}
 
 	static function createTempDirectory()

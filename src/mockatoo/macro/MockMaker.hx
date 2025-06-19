@@ -1,16 +1,16 @@
 package mockatoo.macro;
 
 #if macro
+import haxe.ds.StringMap;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr;
-import haxe.macro.Type;
 import haxe.macro.Printer;
-import mockatoo.Mock;
-import mockatoo.macro.ClassFields;
-import mockatoo.internal.MockOutcome;
-import haxe.ds.StringMap;
+import haxe.macro.Type;
 import mconsole.Console;
+import mockatoo.Mock;
+import mockatoo.internal.MockOutcome;
+import mockatoo.macro.ClassFields;
 
 using StringTools;
 using haxe.macro.Tools;
@@ -153,25 +153,8 @@ class MockMaker
 			
 			if(Context.defined("cs"))
 			{
-				// Create an uninitialized instance of the mocked object in C# in order to bypass constructor calls
-				var class_parts = typePath.pack.concat([typePath.name]);
-				var class_name = class_parts.join(".");
-				var inst : Expr = {
-					expr : EVars([{
-						name: "i",
-						type: class_name.toComplex(),
-						expr: macro null,
-					}]),
-					pos: Context.currentPos(),
-				}
-
-				generatedExpr = macro {
-					$inst;
-					var t = cs.system.Type.GetType($v{class_name});
-					i = cs.system.runtime.serialization.FormatterServices.GetUninitializedObject(t);
-					i.mockProxy = new mockatoo.internal.MockProxy(i, $eIsSpy);
-					i;
-				};
+				var cls = macro $p{typePath.pack.concat([typePath.name])};
+				generatedExpr = macro mockatoo.macro.CSFix.instance($cls, $eIsSpy);
 			}
 			else
 			{
@@ -353,7 +336,7 @@ class MockMaker
 
 		Console.log("paramTypes:" + paramTypes);
 		Console.log("super params:" + classType.params);
-
+		
 		var typeParams:Array<TypeParam> = [];
 		for (p in classType.params)
 		{
@@ -421,6 +404,19 @@ class MockMaker
 			name:"mockatoo",
 			params:[EConst(CString(id)).at()]
 		});
+
+		if(Context.defined("cs"))
+		{
+			metas.push({
+				pos:Context.currentPos(),
+				name:":rtti",
+				params:[]
+			});
+		}
+
+		// trace('${id}Mocked');
+		// trace(metas.map(m -> '${m.name} - ${m.params.map(p -> new haxe.macro.Printer().printExpr(p))}'));
+		// trace(kind);
 
 		return {
 			pos: classType.pos,
@@ -547,7 +543,6 @@ class MockMaker
 	*/
 	function createField(field:Field, fields:Array<Field>)
 	{
-
 		field.meta = updateMeta(field.meta);
 
 		switch (field.kind)

@@ -18,6 +18,9 @@ class Tools
 	*/
 	public static function isStaticPlatform():Bool
 	{
+		if(Context.defined("static"))
+			return true;
+
 		if (_isStaticPlatform == null)
 		{
 			_isStaticPlatform = false;
