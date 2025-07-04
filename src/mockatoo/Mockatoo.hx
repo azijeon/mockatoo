@@ -25,7 +25,7 @@ class Mockatoo
 		try
 		{
 			var mock = new MockMaker(typeToMock.typed(), paramTypes);
-			return mock.toExpr();	
+			return cast mock.toExpr();	
 		}
 		catch(e:mockatoo.exception.MockatooException)
 		{

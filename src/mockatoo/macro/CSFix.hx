@@ -30,10 +30,23 @@ class CSFix
 	 * @param isSpy 
 	 * @return T
 	 */
-	public static function instance<T>(c:Class<T>, isSpy:Bool):T
+	public static function instance<T>(c:Class<T>, params:Array<Class<Dynamic>>, isSpy:Bool):T
 	{
 		var t = cs.Lib.toNativeType(c);
-		var i = cs.system.runtime.serialization.FormatterServices.GetUninitializedObject(t);
+		var i : T;
+
+		if(false && t.IsGenericType)
+		{
+			var g = t.GetGenericTypeDefinition();
+			var p = [];
+			
+			for(a in g.GetGenericArguments())
+				p.push(cs.Syntax.code("typeof(object)"));
+
+			t = g.MakeGenericType(cs.Lib.nativeArray(p, true));
+		}
+			
+		i = cs.system.runtime.serialization.FormatterServices.GetUninitializedObject(t);
 		Reflect.setField(i, "mockProxy", new mockatoo.internal.MockProxy(cast i, isSpy));
 
 		return cast i;

@@ -12,6 +12,7 @@ import mockatoo.Mock;
 import mockatoo.internal.MockOutcome;
 import mockatoo.macro.ClassFields;
 
+using Lambda;
 using StringTools;
 using haxe.macro.Tools;
 using mockatoo.macro.Tools;
@@ -150,11 +151,18 @@ class MockMaker
 
 			var eIsSpy = EConst(CIdent(Std.string(isSpy))).at();
 			var typePath = typeDefinitionId.toTypePath(typeParams);
+
+			// trace(new haxe.macro.Printer().printTypeDefinition(typeDefinition));
 			
 			if(Context.defined("cs"))
 			{
 				var cls = macro $p{typePath.pack.concat([typePath.name])};
-				generatedExpr = macro mockatoo.macro.CSFix.instance($cls, $eIsSpy);
+				
+				var params = [];
+				var inst = macro mockatoo.macro.CSFix.instance($cls, [$a{params}], $eIsSpy);
+				generatedExpr = castExpr(inst);
+				
+				return generatedExpr;
 			}
 			else
 			{
@@ -164,6 +172,38 @@ class MockMaker
 
 		Console.log(generatedExpr.toString());
 		return cast generatedExpr;	
+	}
+
+	function castExpr(expr:Expr):Expr
+	{
+		var cast_type = switch (actualType)
+		{
+			case TInst(t, params): 
+				var c : ComplexType = Std.string(t).toComplex(params.map(p ->
+				{
+					switch (p.follow())
+					{
+						case TMono(t): 
+							return TPType("Dynamic".toComplex());
+
+						default: null;
+					}
+					
+					var complexType = p.follow().toComplexType();
+					if (complexType == null)
+					{
+						complexType = p.toLazyComplexType();
+					}
+
+					return TPType(complexType);
+				}));
+				c;
+				
+			
+			default: null;
+		}
+
+		return macro ($expr : $cast_type);
 	}
 
 	function toComplexType(type:Type):ComplexType
@@ -414,10 +454,6 @@ class MockMaker
 			});
 		}
 
-		// trace('${id}Mocked');
-		// trace(metas.map(m -> '${m.name} - ${m.params.map(p -> new haxe.macro.Printer().printExpr(p))}'));
-		// trace(kind);
-
 		return {
 			pos: classType.pos,
 			params: paramTypes,
@@ -468,6 +504,8 @@ class MockMaker
 	function updateMeta(source:Metadata):Metadata
 	{
 		var metadata:Metadata = [];
+
+		metadata.push({ name: ":keep", params: [], pos: Context.currentPos()});
 
 		for (meta in source)
 		{
@@ -596,12 +634,12 @@ class MockMaker
 					
 			case FVar(_,_):
 				if (isInterface) fields.push(field);
-			case FProp(get, set, t,_):
 
+			case FProp(get, set, t,_):
 				t = normaliseComplexType(t);
 
-				var getMethod = toGetterSetter(get);
-				var setMethod = toGetterSetter(set);
+				var getMethod = toGetterSetter(get, field);
+				var setMethod = toGetterSetter(set, field);
 
 				if (getMethod != "" || setMethod != "")
 					propertyMetas.push({name:field.name, set:setMethod, get:getMethod});
@@ -612,17 +650,23 @@ class MockMaker
 					addConcretePropertyMetadata(field);
 
 					fields.push(field);
-			 
+
+					// #if (haxe_ver < 4)
 					if (getMethod != "")
 					{
 						var getter = createGetterFunction(getMethod, t, field.pos);
+						fields = fields.filter(f -> f.name != getter.name);
+
 						createField(getter, fields);
 					}
-					if (setMethod != "")
+					if (setMethod != ""  && fields.find(f -> f.name == setMethod) == null)
 					{
 						var setter = createSetterFunction(setMethod, t, field.pos);
+						fields = fields.filter(f -> f.name != setter.name);
+						
 						createField(setter, fields);
 					}
+					// #end
 				}
 
 		}
@@ -694,13 +738,18 @@ class MockMaker
 		}
 	}
 
-	function toGetterSetter(value:String):String
+	function toGetterSetter(value:String, field:Field):String
 	{
 		switch (value)
 		{
 			case "default", "null", "never": return "";
 			case "dynamic": throw "Not implemented";
-			default: return value;
+			default:
+				#if (haxe_ver >= 4) 
+				return '${value}_${field.name}';
+				#else
+				return value;
+				#end
 		}
 		return "";
 	}
@@ -901,6 +950,7 @@ class MockMaker
 		f.expr = createBlock([eSwitch]);
 
 		field.kind = FFun(f);
+		
 
 		var meta = createMockFieldMeta(field, f);
 		field.meta.push(meta);

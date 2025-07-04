@@ -260,8 +260,13 @@ class ClassFields
 				var readAccess = getVarAccess(read);
 				var writeAccess = getVarAccess(write);
 
+				#if(haxe_ver >= 4)
+				if (readAccess == "property") readAccess = "get";
+				if (writeAccess == "property") writeAccess = "set";
+				#else
 				if (readAccess == "property") readAccess = "get_" + field.name;
 				if (writeAccess == "property") writeAccess = "set_" + field.name;
+				#end
 
 				return FProp(readAccess, writeAccess, convertType(field.type, paramMap), expr);
 			}
@@ -317,7 +322,8 @@ class ClassFields
 
 			var value:Null<Expr> = arg.opt ? arg.t.toComplexType().getDefaultValue() : null;
 
-			if (arg.opt && Tools.isStaticPlatform())
+			// In haxe 4 the compiler is stricter and (?value:Bool = false) is not compatible with (value:Bool = false)
+			if (arg.opt && (Context.defined("haxe4") || Tools.isStaticPlatform()))
 			{
 				//NOTE(Dom) - this is to prevent #9 - optional method args without a `?` cause compilation error
 				arg.opt = verifyOptionalArgIsActuallyNullable(arg);

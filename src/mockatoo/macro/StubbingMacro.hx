@@ -46,9 +46,9 @@ class StubbingMacro
 
 				var whenExpr = macro cast($eIdent, mockatoo.Mock).mockProxy.stubMethod($v{methodName}, $args);
 
-				var actualExpr = macro {if(false) $eField; $whenExpr;};
+				var actualExpr = macro {if(false) @:privateAccess $eField; $whenExpr;};
 
-				return actualExpr;
+				return macro #if (haxe_ver >= 4)@:privateAccess #end $actualExpr;
 
 			case EField(e, field):
 
@@ -56,11 +56,12 @@ class StubbingMacro
 				var eIdent = ident.toFieldExpr();
 				var whenExpr = macro cast ($eIdent, mockatoo.Mock).mockProxy.stubProperty($v{field});
 				var actualExpr = macro {if(false) $expr; $whenExpr;};
-				return actualExpr;
+				
+				return macro #if (haxe_ver >= 4)@:privateAccess #end $actualExpr;
 
 			default: throw "Invalid expression [" + expr.toString() + "]";
 		}
-		return expr;
+		return macro #if (haxe_ver >= 4)@:privateAccess #end  $expr;
 	}
 
 	static function isMatcher(expr:Expr):Bool

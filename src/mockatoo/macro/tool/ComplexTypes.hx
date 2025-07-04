@@ -34,7 +34,8 @@ class ComplexTypes
 	*/
 	static public function getDefaultValue(type:ComplexType):Expr
 	{
-		if (type != null && Tools.isStaticPlatform())
+		// In haxe 4 the compiler is stricter and (?value:Bool = false) is not compatible with (value:Bool = false)
+		if (type != null && (Context.defined("haxe4") || Tools.isStaticPlatform()))
 		{
 			type = extractAbstractType(type);
 			

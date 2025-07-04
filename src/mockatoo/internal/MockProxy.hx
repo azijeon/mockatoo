@@ -117,11 +117,11 @@ class MockProxy
 	public function stubProperty(property:String):Stubber
 	{
 		var stub = new Stubber();
-
+		
 		var prop:MockProperty = properties.exists(property) ? properties.get(property) : {name:property, get:"", set:""};
 		var getMethod = prop.get != "" ? methods.get(prop.get) : null;
 		var setMethod = prop.set != "" ? methods.get(prop.set) : null;
-		
+
 		var fReturn =  function(value:Dynamic)
 		{
 			Reflect.setField(target, property, value);
